@@ -36,5 +36,6 @@ pipeline {
   }
   environment {
     HOME = '/tmp'
+    DOTNET_CLI_TELEMETRY_OPTOUT = 1
   }
 }
