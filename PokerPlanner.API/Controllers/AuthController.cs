@@ -35,7 +35,7 @@ namespace PokerPlanner.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ApiResponse> Register([FromBody] UserForRegisterDTO userForRegisterDto)
+        public async Task<ApiResponse> Register([FromBody] UserForRegisterDto userForRegisterDto)
         {
             if (ModelState.IsValid)
             {
@@ -75,7 +75,7 @@ namespace PokerPlanner.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] UserForLoginDTO userForLoginDto)
+        public async Task<IActionResult> Login([FromBody] UserForLoginDto userForLoginDto)
         {
             var userFromRepo = await _userRepo.Login(userForLoginDto.Username.Trim().ToLower(), userForLoginDto.Password.Trim());
 

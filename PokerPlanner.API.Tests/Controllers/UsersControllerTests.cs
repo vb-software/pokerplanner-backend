@@ -55,7 +55,7 @@ namespace PokerPlanner.API.Tests.Controllers
         [Fact]
         public async Task NewUserInvalidModelTest()
         {
-            var newUserDto = new UserDTO();
+            var newUserDto = new UserDto();
 
             _controller.ModelState.AddModelError("error", "error");
 
@@ -72,7 +72,7 @@ namespace PokerPlanner.API.Tests.Controllers
         [Fact]
         public async Task NewUserSuccessfullyCreatedTest()
         {
-            var newUserDto = new UserDTO();
+            var newUserDto = new UserDto();
             var mappedUser = new User();
 
             _mockMapper.Setup(map => map.Map<User>(newUserDto)).Returns(mappedUser);

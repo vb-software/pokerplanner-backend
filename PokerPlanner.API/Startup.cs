@@ -27,7 +27,6 @@ namespace PokerPlanner.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // TODO: Add dependencies init here
             services.SetupDependencies(Configuration);
 
             //Disable Automatic Model State Validation built-in to ASP.NET Core

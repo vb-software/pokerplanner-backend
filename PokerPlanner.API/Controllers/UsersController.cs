@@ -44,7 +44,7 @@ namespace PokerPlanner.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ApiResponse> NewUser([FromBody] UserDTO userDTO)
+        public async Task<ApiResponse> NewUser([FromBody] UserDto userDTO)
         {
             if (ModelState.IsValid)
             {
