@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\PokerPlanner.Repositories.Interfaces\PokerPlanner.Repositories.Interfaces.csproj" />
+    <ProjectReference Include="..\PokerPlanner.Repositories\PokerPlanner.Repositories.csproj" />
+    <ProjectReference Include="..\PokerPlanner.Services.Interfaces\PokerPlanner.Services.Interfaces.csproj" />
+    <ProjectReference Include="..\PokerPlanner.Services\PokerPlanner.Services.csproj" />
+    <ProjectReference Include="..\PokerPlanner.Entities\PokerPlanner.Entities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="8.5.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="3.0.0" />
+    <PackageReference Include="Scrutor" Version="3.1.0" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+</Project>
