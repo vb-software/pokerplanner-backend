@@ -31,11 +31,12 @@ namespace PokerPlanner.API.Tests.Controllers
         {
             User mockUser = new User();
             var objectId = ObjectId.GenerateNewId().ToString();
-            _mockUserRepo.Setup(repo => repo.GetUserById(ObjectId.Parse(objectId))).ReturnsAsync(mockUser);
+            var mockGuid = Guid.NewGuid();
+            _mockUserRepo.Setup(repo => repo.GetUserById(mockGuid)).ReturnsAsync(mockUser);
 
             mockUser.Id = objectId;
 
-            var result = await _controller.GetUserById(objectId);
+            var result = await _controller.GetUserById(mockGuid);
 
             Assert.IsType<User>(result);
             Assert.Equal(objectId, result.Id);
