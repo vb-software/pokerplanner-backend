@@ -1,6 +1,6 @@
 namespace PokerPlanner.Entities.DTO
 {
-    public class UserForLoginDTO
+    public class UserForLoginDto
     {
         public string Username { get; set; }
         public string Password { get; set; }

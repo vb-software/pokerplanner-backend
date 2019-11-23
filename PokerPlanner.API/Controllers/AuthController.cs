@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using AutoWrapper.Wrappers;
 using AutoWrapper.Extensions;
 using Microsoft.Extensions.Logging;
+using System.Net;
 
 namespace PokerPlanner.API.Controllers
 {
@@ -35,7 +36,7 @@ namespace PokerPlanner.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ApiResponse> Register([FromBody] UserForRegisterDTO userForRegisterDto)
+        public async Task<ApiResponse> Register([FromBody] UserForRegisterDto userForRegisterDto)
         {
             if (ModelState.IsValid)
             {
@@ -48,7 +49,7 @@ namespace PokerPlanner.API.Controllers
 
                     if (await _userRepo.UserExists(userForRegisterDto.Username))
                     {
-                        ModelState.AddModelError("Username", "Username already exists");
+                        return new ApiResponse((int)HttpStatusCode.BadRequest, "User already exists with that username");
                     }
 
                     var userToCreate = new User
@@ -58,7 +59,9 @@ namespace PokerPlanner.API.Controllers
                         LastName = userForRegisterDto.LastName.Trim()
                     };
 
-                    var createUser = await _userRepo.Register(userToCreate, userForRegisterDto.Password.Trim());
+                    var trimmedPassword = userForRegisterDto.Password.Trim();
+
+                    var createUser = await _userRepo.Register(userToCreate, trimmedPassword);
 
                     return new ApiResponse("Created successfully", createUser, 201);
                 }
@@ -75,7 +78,7 @@ namespace PokerPlanner.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] UserForLoginDTO userForLoginDto)
+        public async Task<IActionResult> Login([FromBody] UserForLoginDto userForLoginDto)
         {
             var userFromRepo = await _userRepo.Login(userForLoginDto.Username.Trim().ToLower(), userForLoginDto.Password.Trim());
 

@@ -25,7 +25,6 @@ namespace PokerPlanner.Repositories.Domain.Mongo
 
         public async Task<User> GetUserById(ObjectId userId)
         {
-            var filter = Builders<User>.Filter.Eq("_id", userId);
             var userFromRepo = await GetCollection().Find(user => user.MongoId == userId).FirstOrDefaultAsync();
             return userFromRepo;
         }
