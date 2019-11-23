@@ -26,7 +26,7 @@ namespace PokerPlanner.API.Controllers
         private readonly JwtSettings _settings;
 
         public AuthController(
-            IUserRepository userRepo, 
+            IUserRepository userRepo,
             JwtSettings settings,
             ILogger<AuthController> logger)
         {
@@ -40,36 +40,28 @@ namespace PokerPlanner.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                try
+                if (!string.IsNullOrEmpty(userForRegisterDto.Username))
                 {
-                    if (!string.IsNullOrEmpty(userForRegisterDto.Username))
-                    {
-                        userForRegisterDto.Username = userForRegisterDto.Username.Trim().ToLower();
-                    }
-
-                    if (await _userRepo.UserExists(userForRegisterDto.Username))
-                    {
-                        return new ApiResponse((int)HttpStatusCode.BadRequest, "User already exists with that username");
-                    }
-
-                    var userToCreate = new User
-                    {
-                        Username = userForRegisterDto.Username,
-                        FirstName = userForRegisterDto.FirstName.Trim(),
-                        LastName = userForRegisterDto.LastName.Trim()
-                    };
-
-                    var trimmedPassword = userForRegisterDto.Password.Trim();
-
-                    var createUser = await _userRepo.Register(userToCreate, trimmedPassword);
-
-                    return new ApiResponse("Created successfully", createUser, 201);
+                    userForRegisterDto.Username = userForRegisterDto.Username.Trim().ToLower();
                 }
-                catch (Exception ex)
+
+                if (await _userRepo.UserExists(userForRegisterDto.Username))
                 {
-                    _logger.Log(LogLevel.Error, ex, "Error while trying to create user.");
-                    throw;
+                    return new ApiResponse((int)HttpStatusCode.BadRequest, "User already exists with that username");
                 }
+
+                var userToCreate = new User
+                {
+                    Username = userForRegisterDto.Username,
+                    FirstName = userForRegisterDto.FirstName.Trim(),
+                    LastName = userForRegisterDto.LastName.Trim()
+                };
+
+                var trimmedPassword = userForRegisterDto.Password.Trim();
+
+                var createUser = await _userRepo.Register(userToCreate, trimmedPassword);
+
+                return new ApiResponse("Created successfully", createUser, 201);
             }
             else
             {
@@ -102,7 +94,7 @@ namespace PokerPlanner.API.Controllers
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha512Signature)
             };
-            
+
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 

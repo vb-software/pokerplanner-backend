@@ -48,17 +48,9 @@ namespace PokerPlanner.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                try
-                {
-                    var user = await _userRepo.AddNewUser(_mapper.Map<User>(userDTO));
-                    
-                    return new ApiResponse("Created successfully", user, 201);
-                }
-                catch (Exception ex)
-                {
-                    _logger.Log(LogLevel.Error, ex, "Error while trying to create user.");
-                    throw;
-                }
+                var user = await _userRepo.AddNewUser(_mapper.Map<User>(userDTO));
+
+                return new ApiResponse("Created successfully", user, 201);
             }
             else
             {
