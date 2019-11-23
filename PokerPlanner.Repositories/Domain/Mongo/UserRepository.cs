@@ -7,6 +7,7 @@ using PokerPlanner.Repositories.Mongo;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using PokerPlanner.Repositories.Interfaces.Domain.Mongo;
+using System;
 
 namespace PokerPlanner.Repositories.Domain.Mongo
 {
@@ -23,9 +24,18 @@ namespace PokerPlanner.Repositories.Domain.Mongo
             return userToAdd;
         }
 
-        public async Task<User> GetUserById(ObjectId userId)
+        public async Task<User> GetUserById(Guid userGuid)
         {
-            var userFromRepo = await GetCollection().Find(user => user.MongoId == userId).FirstOrDefaultAsync();
+            var userFromRepo = await GetCollection().Find(user => user.Guid == userGuid).FirstOrDefaultAsync();
+            return userFromRepo;
+        }
+
+        public async Task<User> GetUserByUsername(string username)
+        {
+            var collection = Db.GetGlobalCollection<User>();
+
+            var userFromRepo = await collection.Find(x => x.Username == username).FirstOrDefaultAsync();
+
             return userFromRepo;
         }
 

@@ -38,9 +38,9 @@ namespace PokerPlanner.API.Controllers
 
         [Route("{id}")]
         [HttpGet]
-        public async Task<User> GetUserById(string id)
+        public async Task<User> GetUserById(Guid id)
         {
-            return await _userRepo.GetUserById(ObjectId.Parse(id));
+            return await _userRepo.GetUserById(id);
         }
 
         [HttpPost]
