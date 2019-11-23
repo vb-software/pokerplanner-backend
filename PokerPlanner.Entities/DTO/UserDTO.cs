@@ -3,14 +3,14 @@ using FluentValidation;
 
 namespace PokerPlanner.Entities.DTO
 {
-    public class UserDTO
+    public class UserDto
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime DateOfBirth { get; set; }
     }
 
-    public class UserDTOValidator : AbstractValidator<UserDTO>
+    public class UserDTOValidator : AbstractValidator<UserDto>
     {
         public UserDTOValidator()
         {
