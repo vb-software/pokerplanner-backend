@@ -11,7 +11,7 @@ RUN apt-get update -y \
     && apt-get install aspnetcore-runtime-2.2 -y
 
 # Install Java
-RUN sudo apt-get update
-RUN sudo apt-get install -t openjdk-8-jdk
+RUN apt-get update
+RUN apt-get install -t openjdk-8-jdk
 
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
