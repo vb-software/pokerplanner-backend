@@ -11,5 +11,10 @@ RUN apt-get update -y \
     && apt-get install aspnetcore-runtime-2.2 -y
 
 # Install Java
-RUN apt-get update
-RUN apt-get install openjdk-11-jre
+RUN apt-get install -y \
+        openjdk-11-jre \
+        apt-transport-https \
+        ca-certificates \
+        curl \
+        gnupg-agent \
+        software-properties-common
