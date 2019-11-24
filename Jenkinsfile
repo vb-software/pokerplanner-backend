@@ -6,11 +6,7 @@ pipeline {
   }
 
   agent {
-    docker {
-      image 'mcr.microsoft.com/dotnet/core/sdk:3.0'
-      // args "-v ${MSBUILD_SQ_SCANNER_HOME}:/opt/sonarscanner"
-    }
-
+    dockerfile true
   }
   stages {
     stage('Clean and Build') {
