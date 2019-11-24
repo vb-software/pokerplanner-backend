@@ -1,4 +1,4 @@
-MSBUILD_SQ_SCANNER_HOME = tool name: 'SonarQubeScannerMSBuild', type: 'hudson.plugins.sonar.MsBuildSQRunnerInstallation'
+def MSBUILD_SQ_SCANNER_HOME = tool name: 'SonarQubeScannerMSBuild'
 
 pipeline {
   agent {
