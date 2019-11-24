@@ -22,7 +22,7 @@ pipeline {
       steps {
         withSonarQubeEnv('sonarqube') {
           script {
-            CONTENTS = sh(returnStdout: true, script: 'ls -la /opt/sonarscanner')
+            CONTENTS = sh(returnStdout: true, script: 'ls -la /opt/sonarscanner/SonarQubeScannerMSBuild')
           }
           echo "dir size = ${CONTENTS}"
           sh 'dotnet restore'
