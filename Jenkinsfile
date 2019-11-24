@@ -11,7 +11,7 @@ pipeline {
   stages {
     stage('Clean and Build') {
       steps {
-        withSonarQubeEnv('sonarqube') {}
+        withSonarQubeEnv('sonarqube') {
           sh 'dotnet restore'
           sh 'dotnet /opt/sonarscanner/SonarScanner.MSBuild.dll begin /k:BA282229-FAC5-4740-B88B-DDBA89359F89 /d:sonar.host.url=https://sonarqube.vandenbrinksoftware.com /d:sonar.login=7fcfcf6e197cb915aa463035592b2de52451bf9a /d:sonar.cs.opencover.reportsPaths=\'**/coverage.opencover.xml\' /d:sonar.branch.name=${BRANCH_NAME} /d:sonar.coverage.exclusions=\'***API/Program.cs,***API/Startup.cs\''
           sh 'dotnet build -c Release'
