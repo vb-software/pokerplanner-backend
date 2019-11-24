@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PokerPlanner.Entities.Domain.Mongo;
 using PokerPlanner.Entities.DTO;
-using PokerPlanner.Repositories.Interfaces.Domain.Mongo;
 using PokerPlanner.Services.Interfaces.Domain.Mongo;
 
 namespace PokerPlanner.API.Controllers
@@ -42,6 +41,23 @@ namespace PokerPlanner.API.Controllers
             }
         }
 
+        [HttpPut]
+        public async Task<ApiResponse> UpdateWorkspace([FromBody] CreateWorkspaceDto workspaceDto)
+        {
+            var identity = User.Identity;
+
+            if (ModelState.IsValid)
+            {
+                var workspace = await _workspaceService.CreateWorkspaceForUser(identity.Name, workspaceDto);
+
+                return new ApiResponse("Workspace updated successfully", workspace, (int)HttpStatusCode.OK);
+            }
+            else
+            {
+                throw new ApiException(ModelState.AllErrors());
+            }
+        }
+
         [HttpGet]
         public async Task<List<Workspace>> GetWorkspaces()
         {
@@ -60,6 +76,23 @@ namespace PokerPlanner.API.Controllers
             var workspace = await _workspaceService.GetWorkspaceByUserAndId(identity.Name, workspaceId);
 
             return workspace;
+        }
+
+        [HttpPost("{workspaceId}/releases")]
+        public async Task<ApiResponse> AddReleaseToWorkspace(Guid workspaceId, CreateWorkspaceReleaseDto workspaceReleaseDto)
+        {
+            var identity = User.Identity;
+
+            if (ModelState.IsValid)
+            {
+                var workspace = await _workspaceService.AddReleaseToWorkspace(workspaceId, workspaceReleaseDto);
+
+                return new ApiResponse("Release added to workspace successfully", workspace, (int)HttpStatusCode.OK);
+            }
+            else
+            {
+                throw new ApiException(ModelState.AllErrors());
+            }
         }
     }
 }

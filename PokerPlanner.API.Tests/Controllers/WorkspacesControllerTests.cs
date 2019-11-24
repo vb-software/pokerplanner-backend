@@ -76,6 +76,38 @@ namespace PokerPlanner.API.Tests.Controllers
         }
 
         [Fact]
+        public async Task UpdateWorkSpaceInvalidModelTest()
+        {
+            _controller.ModelState.AddModelError("error", "error");
+
+            try
+            {
+                var response = await _controller.UpdateWorkspace(new CreateWorkspaceDto());
+            }
+            catch (Exception e)
+            {
+                Assert.IsType<ApiException>(e);
+            }
+        }
+
+        [Fact]
+        public async Task UpdateWorkSpaceValidModelTest()
+        {
+            var createWorkspaceDto = new CreateWorkspaceDto();
+            var workspace = new Workspace();
+            _workspaceService.Setup(service => service.CreateWorkspaceForUser("username", createWorkspaceDto)).ReturnsAsync(workspace);
+
+            var response = await _controller.UpdateWorkspace(createWorkspaceDto);
+
+            Assert.NotNull(response);
+            Assert.IsType<ApiResponse>(response);
+            Assert.Equal("Workspace updated successfully", response.Message);
+            Assert.False(response.IsError);
+            Assert.Equal((int)HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(workspace, response.Result);
+        }
+
+        [Fact]
         public async Task GetWorkspacesTest()
         {
             _workspaceService.Setup(service => service.GetWorkspacesByUser(It.IsAny<string>())).ReturnsAsync(new List<Workspace> { new Workspace() });

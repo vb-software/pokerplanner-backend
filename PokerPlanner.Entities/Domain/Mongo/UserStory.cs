@@ -2,7 +2,6 @@ using System;
 
 namespace PokerPlanner.Entities.Domain.Mongo
 {
-    [Serializable]
     public class UserStory
     {
         public Guid Guid { get; set; }

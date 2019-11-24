@@ -12,7 +12,6 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoWrapper.Wrappers;
 using AutoWrapper.Extensions;
-using Microsoft.Extensions.Logging;
 using System.Net;
 
 namespace PokerPlanner.API.Controllers

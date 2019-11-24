@@ -6,6 +6,7 @@ using AutoMapper;
 using PokerPlanner.Entities.Domain.Mongo;
 using PokerPlanner.Entities.DTO;
 using PokerPlanner.Repositories.Interfaces.Domain.Mongo;
+using PokerPlanner.Services.Extensions;
 using PokerPlanner.Services.Interfaces.Domain.Mongo;
 
 namespace PokerPlanner.Services.Domain.Mongo
@@ -22,6 +23,32 @@ namespace PokerPlanner.Services.Domain.Mongo
             _workspaceRepo = workspaceRepo;
             _mapper = mapper;
         }
+
+        public async Task<Workspace> AddReleaseToWorkspace(Guid workspaceId, CreateWorkspaceReleaseDto releaseDto)
+        {
+            var workspaceFromRepo = await _workspaceRepo.GetWorkspaceById(workspaceId);
+
+            if (workspaceFromRepo == null)
+            {
+                return null;
+            }
+
+            var newWorkspaceRelease = _mapper.Map<Release>(releaseDto);
+
+            newWorkspaceRelease.Guid = Guid.NewGuid();
+
+            if (workspaceFromRepo.Releases.IsNullOrEmpty())
+            {
+                workspaceFromRepo.Releases = new List<Release>();
+            }
+
+            workspaceFromRepo.Releases.Add(newWorkspaceRelease);
+
+            await _workspaceRepo.CreateOrUpdateWorkspace(workspaceFromRepo);
+
+            return workspaceFromRepo;
+        }
+
         public async Task<Workspace> CreateWorkspaceForUser(string username, CreateWorkspaceDto workspaceDto)
         {
             var userExists = await _userRepo.UserExists(username);
@@ -38,7 +65,7 @@ namespace PokerPlanner.Services.Domain.Mongo
             newWorkspace.Guid = Guid.NewGuid();
             newWorkspace.OwnerGuid = user.Guid;
 
-            await _workspaceRepo.CreateWorkspace(newWorkspace);
+            await _workspaceRepo.CreateOrUpdateWorkspace(newWorkspace);
 
             return newWorkspace;
         }
