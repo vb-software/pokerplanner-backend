@@ -24,6 +24,7 @@
     <ProjectReference Include="..\PokerPlanner.API\PokerPlanner.API.csproj" />
     <ProjectReference Include="..\PokerPlanner.Repositories.Interfaces\PokerPlanner.Repositories.Interfaces.csproj" />
     <ProjectReference Include="..\PokerPlanner.Entities\PokerPlanner.Entities.csproj" />
+    <ProjectReference Include="..\PokerPlanner.Services.Interfaces\PokerPlanner.Services.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>
