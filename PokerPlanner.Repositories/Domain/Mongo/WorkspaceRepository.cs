@@ -23,11 +23,11 @@ namespace PokerPlanner.Repositories.Domain.Mongo
             return collection;
         }
 
-        public async Task<Workspace> CreateWorkspace(Workspace workspace)
+        public async Task<Workspace> CreateOrUpdateWorkspace(Workspace workspace)
         {
             var collection = GetCollection();
 
-            await collection.InsertOneAsync(workspace);
+            await collection.ReplaceOneAsync(x => x.Guid == workspace.Guid, workspace);
 
             return workspace;
         }
@@ -48,6 +48,15 @@ namespace PokerPlanner.Repositories.Domain.Mongo
             var workspaces = await collection.Find(x => x.OwnerGuid == userGuid).ToListAsync();
 
             return workspaces;
+        }
+
+        public async Task<Workspace> GetWorkspaceById(Guid workspaceId)
+        {
+            var collection = GetCollection();
+
+            var workspace = await collection.Find(x => x.Guid == workspaceId).FirstOrDefaultAsync();
+
+            return workspace;
         }
     }
 }

@@ -5,11 +5,9 @@ using AutoMapper;
 using AutoWrapper.Extensions;
 using AutoWrapper.Wrappers;
 using PokerPlanner.Entities.Domain.Mongo;
-using MongoDB.Bson;
 using PokerPlanner.Repositories.Interfaces.Domain.Mongo;
 using PokerPlanner.Entities.DTO;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 
 namespace PokerPlanner.API.Controllers

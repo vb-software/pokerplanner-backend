@@ -9,7 +9,6 @@ namespace PokerPlanner.Entities.Domain.Mongo
         Fibanocci
     }
 
-    [Serializable]
     public class Configuration
     {
         public Guid Guid { get; set; }
