@@ -28,16 +28,16 @@ pipeline {
       }
     }
 
-    stage('Publish') {
-      parallel {
-        stage('Archive') {
-          steps {
-            // archiveArtifacts 'PokerPlanner.API/bin/Release/**'
-          }
-        }
+    // stage('Publish') {
+    //   parallel {
+    //     stage('Archive') {
+    //       steps {
+    //         archiveArtifacts 'PokerPlanner.API/bin/Release/**'
+    //       }
+    //     }
 
-      }
-    }
+    //   }
+    // }
 
   }
   environment {
