@@ -20,13 +20,11 @@ namespace PokerPlanner.API.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly ILogger<UsersController> _logger;
         private readonly IUserRepository _userRepo;
 
-        public UsersController(IMapper mapper, ILogger<UsersController> logger, IUserRepository userRepo)
+        public UsersController(IMapper mapper, IUserRepository userRepo)
         {
             _mapper = mapper;
-            _logger = logger;
             _userRepo = userRepo;
         }
 

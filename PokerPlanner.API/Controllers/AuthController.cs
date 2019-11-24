@@ -21,18 +21,15 @@ namespace PokerPlanner.API.Controllers
     [AllowAnonymous]
     public class AuthController : Controller
     {
-        private readonly ILogger<AuthController> _logger;
         private readonly IUserRepository _userRepo;
         private readonly JwtSettings _settings;
 
         public AuthController(
             IUserRepository userRepo,
-            JwtSettings settings,
-            ILogger<AuthController> logger)
+            JwtSettings settings)
         {
             _userRepo = userRepo;
             _settings = settings;
-            _logger = logger;
         }
 
         [HttpPost("register")]

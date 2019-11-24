@@ -18,12 +18,10 @@ namespace PokerPlanner.API.Controllers
     [Authorize]
     public class WorkspacesController : ControllerBase
     {
-        private readonly IUserRepository _userRepo;
         private readonly IWorkspaceService _workspaceService;
 
-        public WorkspacesController(IUserRepository userRepo, IWorkspaceService workspaceService)
+        public WorkspacesController(IWorkspaceService workspaceService)
         {
-            _userRepo = userRepo;
             _workspaceService = workspaceService;
         }
 

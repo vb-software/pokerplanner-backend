@@ -24,7 +24,7 @@ namespace PokerPlanner.API.Tests.Controllers
         {
             _mockUserRepo = new Mock<IUserRepository>();
             _mockMapper = new Mock<IMapper>();
-            _controller = new UsersController(_mockMapper.Object, null, _mockUserRepo.Object);
+            _controller = new UsersController(_mockMapper.Object, _mockUserRepo.Object);
         }
         [Fact]
         public async Task GetUserByIdTest()

@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokerPlanner.Services", "Po
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokerPlanner.API.Tests", "PokerPlanner.API.Tests\PokerPlanner.API.Tests.csproj", "{E3FFB746-7E18-4EAA-8C87-00C7B48CB577}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokerPlanner.Services.Tests", "PokerPlanner.Services.Tests\PokerPlanner.Services.Tests.csproj", "{AC616158-4494-4D06-BD15-FB4EEC05BBF2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -128,5 +130,17 @@ Global
 		{E3FFB746-7E18-4EAA-8C87-00C7B48CB577}.Release|x64.Build.0 = Release|Any CPU
 		{E3FFB746-7E18-4EAA-8C87-00C7B48CB577}.Release|x86.ActiveCfg = Release|Any CPU
 		{E3FFB746-7E18-4EAA-8C87-00C7B48CB577}.Release|x86.Build.0 = Release|Any CPU
+		{AC616158-4494-4D06-BD15-FB4EEC05BBF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC616158-4494-4D06-BD15-FB4EEC05BBF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC616158-4494-4D06-BD15-FB4EEC05BBF2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AC616158-4494-4D06-BD15-FB4EEC05BBF2}.Debug|x64.Build.0 = Debug|Any CPU
+		{AC616158-4494-4D06-BD15-FB4EEC05BBF2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AC616158-4494-4D06-BD15-FB4EEC05BBF2}.Debug|x86.Build.0 = Debug|Any CPU
+		{AC616158-4494-4D06-BD15-FB4EEC05BBF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC616158-4494-4D06-BD15-FB4EEC05BBF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC616158-4494-4D06-BD15-FB4EEC05BBF2}.Release|x64.ActiveCfg = Release|Any CPU
+		{AC616158-4494-4D06-BD15-FB4EEC05BBF2}.Release|x64.Build.0 = Release|Any CPU
+		{AC616158-4494-4D06-BD15-FB4EEC05BBF2}.Release|x86.ActiveCfg = Release|Any CPU
+		{AC616158-4494-4D06-BD15-FB4EEC05BBF2}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
