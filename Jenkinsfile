@@ -1,5 +1,3 @@
-def MSBUILD_SQ_SCANNER_HOME = tool 'SonarQubeScannerMSBuild'
-
 pipeline {
   agent {
     docker {
@@ -44,5 +42,6 @@ pipeline {
   environment {
     HOME = '/tmp'
     DOTNET_CLI_TELEMETRY_OPTOUT = 1
+    MSBUILD_SQ_SCANNER_HOME = tool 'SonarQubeScannerMSBuild'
   }
 }
