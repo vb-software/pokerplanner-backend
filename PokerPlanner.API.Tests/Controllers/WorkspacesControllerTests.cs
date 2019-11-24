@@ -130,5 +130,38 @@ namespace PokerPlanner.API.Tests.Controllers
             Assert.IsType<Workspace>(workspaceReturned);
         }
 
+        [Fact]
+        public async Task AddReleaseToWorkspaceInvalidModelTest()
+        {
+            _controller.ModelState.AddModelError("error", "error");
+
+            try
+            {
+                await _controller.AddReleaseToWorkspace(Guid.NewGuid(), new CreateWorkspaceReleaseDto());
+            }
+            catch (Exception e)
+            {
+                Assert.IsType<ApiException>(e);
+            }
+        }
+
+        [Fact]
+        public async Task AddReleaseToWorkspaceValidModelTest()
+        {
+            var workspaceId = Guid.NewGuid();
+            var workspaceReleaseDto = new CreateWorkspaceReleaseDto();
+            var workspace = new Workspace();
+
+            _workspaceService.Setup(service => service.AddReleaseToWorkspace(workspaceId, workspaceReleaseDto)).ReturnsAsync(workspace);
+
+            var response = await _controller.AddReleaseToWorkspace(workspaceId, workspaceReleaseDto);
+
+            Assert.NotNull(response);
+            Assert.IsType<ApiResponse>(response);
+            Assert.Equal("Release added to workspace successfully", response.Message);
+            Assert.Equal((int)HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(workspace, response.Result);
+        }
+
     }
 }

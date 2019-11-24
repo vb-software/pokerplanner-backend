@@ -81,8 +81,6 @@ namespace PokerPlanner.API.Controllers
         [HttpPost("{workspaceId}/releases")]
         public async Task<ApiResponse> AddReleaseToWorkspace(Guid workspaceId, CreateWorkspaceReleaseDto workspaceReleaseDto)
         {
-            var identity = User.Identity;
-
             if (ModelState.IsValid)
             {
                 var workspace = await _workspaceService.AddReleaseToWorkspace(workspaceId, workspaceReleaseDto);
