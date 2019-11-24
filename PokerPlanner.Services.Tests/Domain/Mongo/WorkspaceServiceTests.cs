@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Moq;
@@ -151,6 +152,38 @@ namespace PokerPlanner.Services.Tests.Domain.Mongo
             Assert.NotNull(workspaces);
             Assert.IsType<List<Workspace>>(workspaces);
             Assert.Equal(2, workspaces.Count);
+        }
+
+        [Fact]
+        public async Task AddReleaseToWorkspaceWhenWorkspaceNullTest()
+        {
+            var workspaceId = Guid.NewGuid();
+
+            var workspace = await _service.AddReleaseToWorkspace(workspaceId, new CreateWorkspaceReleaseDto());
+
+            Assert.Null(workspace);
+        }
+
+        [Fact]
+        public async Task AddReleaseToWorkspaceWhenReleasesNullTest()
+        {
+            var workspaceId = Guid.NewGuid();
+            var workspaceReleaseDto = new CreateWorkspaceReleaseDto();
+            var workspaceFromRepo = new Workspace();
+            var mappedRelease = new Release();
+
+            _workspaceRepo.Setup(repo => repo.GetWorkspaceById(workspaceId)).ReturnsAsync(workspaceFromRepo);
+
+            _mapper.Setup(mapper => mapper.Map<Release>(workspaceReleaseDto)).Returns(mappedRelease);
+
+            _workspaceRepo.Setup(repo => repo.CreateOrUpdateWorkspace(workspaceFromRepo)).ReturnsAsync(workspaceFromRepo);
+
+            var workspace = await _service.AddReleaseToWorkspace(workspaceId, workspaceReleaseDto);
+
+            Assert.NotNull(workspace);
+            Assert.IsType<Workspace>(workspace);
+            Assert.NotNull(workspace.Releases);
+            Assert.Equal(mappedRelease, workspace.Releases.First());
         }
     }
 }
