@@ -1,10 +1,15 @@
+node('master') {
+    stage('Set Env') {
+      MSBUILD_SQ_SCANNER_HOME = tool 'SonarQubeScannerMSBuild'
+    }
+}
+
 pipeline {
   environment {
     HOME = '/tmp'
     DOTNET_CLI_TELEMETRY_OPTOUT = 1
-    MSBUILD_SQ_SCANNER_HOME = tool 'SonarQubeScannerMSBuild'
   }
-  
+
   agent {
     docker {
       image 'mcr.microsoft.com/dotnet/core/sdk:3.0'
