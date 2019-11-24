@@ -79,13 +79,28 @@ namespace PokerPlanner.API.Controllers
         }
 
         [HttpPost("{workspaceId}/releases")]
-        public async Task<ApiResponse> AddReleaseToWorkspace(Guid workspaceId, CreateWorkspaceReleaseDto workspaceReleaseDto)
+        public async Task<ApiResponse> AddReleaseToWorkspace(Guid workspaceId, [FromBody] CreateWorkspaceReleaseDto workspaceReleaseDto)
         {
             if (ModelState.IsValid)
             {
                 var workspace = await _workspaceService.AddReleaseToWorkspace(workspaceId, workspaceReleaseDto);
 
                 return new ApiResponse("Release added to workspace successfully", workspace, (int)HttpStatusCode.OK);
+            }
+            else
+            {
+                throw new ApiException(ModelState.AllErrors());
+            }
+        }
+
+        [HttpPost("{workspaceId}/releases/{releaseId}/iterations")]
+        public async Task<ApiResponse> AddIterationToWorkspaceRelease(Guid workspaceId, Guid releaseId, [FromBody] CreateWorkspaceReleaseIterationDto workspaceReleaseIterationDto)
+        {
+            if (ModelState.IsValid)
+            {
+                var release = await _workspaceService.AddIterationToWorkspaceRelease(workspaceId, releaseId, workspaceReleaseIterationDto);
+
+                return new ApiResponse("Iteration added to release successfully", release, (int)HttpStatusCode.OK);
             }
             else
             {

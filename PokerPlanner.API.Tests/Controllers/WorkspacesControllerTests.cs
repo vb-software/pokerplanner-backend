@@ -163,5 +163,39 @@ namespace PokerPlanner.API.Tests.Controllers
             Assert.Equal(workspace, response.Result);
         }
 
+        [Fact]
+        public async Task AddIterationToWorkspaceReleaseInvalidModelTest()
+        {
+            _controller.ModelState.AddModelError("error", "error");
+
+            try
+            {
+                await _controller.AddIterationToWorkspaceRelease(Guid.NewGuid(), Guid.NewGuid(), new CreateWorkspaceReleaseIterationDto());
+            }
+            catch (Exception e)
+            {
+                Assert.IsType<ApiException>(e);
+            }
+        }
+
+        [Fact]
+        public async Task AddIterationToWorkspaceReleaseValidModelTest()
+        {
+            var workspaceId = Guid.NewGuid();
+            var workspaceReleaseIterationDto = new CreateWorkspaceReleaseIterationDto();
+            var releaseId = Guid.NewGuid();
+            var release = new Release();
+
+            _workspaceService.Setup(service => service.AddIterationToWorkspaceRelease(workspaceId, releaseId, workspaceReleaseIterationDto)).ReturnsAsync(release);
+
+            var response = await _controller.AddIterationToWorkspaceRelease(workspaceId, releaseId, workspaceReleaseIterationDto);
+
+            Assert.NotNull(response);
+            Assert.IsType<ApiResponse>(response);
+            Assert.Equal("Iteration added to release successfully", response.Message);
+            Assert.Equal((int)HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(release, response.Result);
+        }
+
     }
 }

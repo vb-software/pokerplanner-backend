@@ -185,5 +185,55 @@ namespace PokerPlanner.Services.Tests.Domain.Mongo
             Assert.NotNull(workspace.Releases);
             Assert.Equal(mappedRelease, workspace.Releases.First());
         }
+
+        [Fact]
+        public async Task AddIterationToWorkspaceReleaseWhenWorkspaceNullTest()
+        {
+            var workspaceId = Guid.NewGuid();
+            var releaseId = Guid.NewGuid();
+
+            var release = await _service.AddIterationToWorkspaceRelease(workspaceId, releaseId, new CreateWorkspaceReleaseIterationDto());
+
+            Assert.Null(release);
+        }
+
+        [Fact]
+        public async Task AddIterationToWorkspaceReleaseWhenReleaseNullTest()
+        {
+            var workspaceId = Guid.NewGuid();
+            var releaseId = Guid.NewGuid();
+            var createIterationDto = new CreateWorkspaceReleaseIterationDto();
+            var workspace = new Workspace { Releases = new List<Release> { new Release { Guid = Guid.NewGuid() } } };
+            var iteration = new Iteration();
+
+            _workspaceRepo.Setup(repo => repo.GetWorkspaceById(workspaceId)).ReturnsAsync(workspace);
+
+            _mapper.Setup(mapper => mapper.Map<Iteration>(createIterationDto)).Returns(iteration);
+
+            var release = await _service.AddIterationToWorkspaceRelease(workspaceId, releaseId, createIterationDto);
+
+            Assert.Null(release);
+        }
+
+        [Fact]
+        public async Task AddIterationToWorkspaceReleaseWhenIterationsNullTest()
+        {
+            var workspaceId = Guid.NewGuid();
+            var releaseId = Guid.NewGuid();
+            var createIterationDto = new CreateWorkspaceReleaseIterationDto();
+            var workspace = new Workspace { Releases = new List<Release> { new Release { Guid = releaseId } } };
+            var iteration = new Iteration();
+
+            _workspaceRepo.Setup(repo => repo.GetWorkspaceById(workspaceId)).ReturnsAsync(workspace);
+
+            _mapper.Setup(mapper => mapper.Map<Iteration>(createIterationDto)).Returns(iteration);
+
+            var release = await _service.AddIterationToWorkspaceRelease(workspaceId, releaseId, createIterationDto);
+
+            Assert.NotNull(release);
+            Assert.IsType<Release>(release);
+            Assert.NotNull(release.Iterations);
+            Assert.Equal(iteration, release.Iterations.First());
+        }
     }
 }

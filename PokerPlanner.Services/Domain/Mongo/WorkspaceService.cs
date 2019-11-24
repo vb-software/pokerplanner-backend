@@ -24,6 +24,38 @@ namespace PokerPlanner.Services.Domain.Mongo
             _mapper = mapper;
         }
 
+        public async Task<Release> AddIterationToWorkspaceRelease(Guid workspaceId, Guid releaseId, CreateWorkspaceReleaseIterationDto iterationDto)
+        {
+            var workspaceFromRepo = await _workspaceRepo.GetWorkspaceById(workspaceId);
+
+            if (workspaceFromRepo == null)
+            {
+                return null;
+            }
+
+            var newWorkspaceReleaseIteration = _mapper.Map<Iteration>(iterationDto);
+
+            newWorkspaceReleaseIteration.Guid = Guid.NewGuid();
+
+            var releaseToAddIteration = workspaceFromRepo.Releases.FirstOrDefault(x => x.Guid == releaseId);
+
+            if (releaseToAddIteration == null)
+            {
+                return null;
+            }
+
+            if (releaseToAddIteration.Iterations.IsNullOrEmpty())
+            {
+                releaseToAddIteration.Iterations = new List<Iteration>();
+            }
+
+            releaseToAddIteration.Iterations.Add(newWorkspaceReleaseIteration);
+
+            await _workspaceRepo.CreateOrUpdateWorkspace(workspaceFromRepo);
+
+            return releaseToAddIteration;
+        }
+
         public async Task<Workspace> AddReleaseToWorkspace(Guid workspaceId, CreateWorkspaceReleaseDto releaseDto)
         {
             var workspaceFromRepo = await _workspaceRepo.GetWorkspaceById(workspaceId);

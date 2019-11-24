@@ -10,6 +10,7 @@ namespace PokerPlanner.Entities.AutoMapper.Profiles
         {
             CreateMap<CreateWorkspaceDto, Workspace>();
             CreateMap<CreateWorkspaceReleaseDto, Release>();
+            CreateMap<CreateWorkspaceReleaseIterationDto, Iteration>();
         }
     }
 }
