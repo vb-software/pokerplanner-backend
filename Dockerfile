@@ -12,6 +12,4 @@ RUN apt-get update -y \
 
 # Install Java
 RUN apt-get update
-RUN apt-get install -t openjdk-8-jdk
-
-ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
+RUN apt-get install openjdk-11-jre
