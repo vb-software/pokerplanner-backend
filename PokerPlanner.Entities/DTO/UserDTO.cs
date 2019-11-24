@@ -10,9 +10,9 @@ namespace PokerPlanner.Entities.DTO
         public DateTime DateOfBirth { get; set; }
     }
 
-    public class UserDTOValidator : AbstractValidator<UserDto>
+    public class UserDtoValidator : AbstractValidator<UserDto>
     {
-        public UserDTOValidator()
+        public UserDtoValidator()
         {
             RuleFor(o => o.FirstName).NotEmpty();
             RuleFor(o => o.LastName).NotEmpty();

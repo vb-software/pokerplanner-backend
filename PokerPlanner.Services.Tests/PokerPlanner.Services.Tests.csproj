@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
-    <PackageReference Include="AutoWrapper.Core" Version="2.1.0" />
     <PackageReference Include="coverlet.msbuild" Version="2.7.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -21,10 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PokerPlanner.API\PokerPlanner.API.csproj" />
-    <ProjectReference Include="..\PokerPlanner.Repositories.Interfaces\PokerPlanner.Repositories.Interfaces.csproj" />
     <ProjectReference Include="..\PokerPlanner.Entities\PokerPlanner.Entities.csproj" />
     <ProjectReference Include="..\PokerPlanner.Services.Interfaces\PokerPlanner.Services.Interfaces.csproj" />
+    <ProjectReference Include="..\PokerPlanner.Services\PokerPlanner.Services.csproj" />
   </ItemGroup>
 
 </Project>

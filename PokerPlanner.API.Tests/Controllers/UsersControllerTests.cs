@@ -24,18 +24,19 @@ namespace PokerPlanner.API.Tests.Controllers
         {
             _mockUserRepo = new Mock<IUserRepository>();
             _mockMapper = new Mock<IMapper>();
-            _controller = new UsersController(_mockMapper.Object, null, _mockUserRepo.Object);
+            _controller = new UsersController(_mockMapper.Object, _mockUserRepo.Object);
         }
         [Fact]
         public async Task GetUserByIdTest()
         {
             User mockUser = new User();
             var objectId = ObjectId.GenerateNewId().ToString();
-            _mockUserRepo.Setup(repo => repo.GetUserById(ObjectId.Parse(objectId))).ReturnsAsync(mockUser);
+            var mockGuid = Guid.NewGuid();
+            _mockUserRepo.Setup(repo => repo.GetUserById(mockGuid)).ReturnsAsync(mockUser);
 
             mockUser.Id = objectId;
 
-            var result = await _controller.GetUserById(objectId);
+            var result = await _controller.GetUserById(mockGuid);
 
             Assert.IsType<User>(result);
             Assert.Equal(objectId, result.Id);

@@ -23,7 +23,7 @@ namespace PokerPlanner.API.Tests.Controllers
         {
             _mockUserRepository = new Mock<IUserRepository>();
             _jwtSettings = new JwtSettings { Secret = Guid.NewGuid().ToString() };
-            _controller = new AuthController(_mockUserRepository.Object, _jwtSettings, null);
+            _controller = new AuthController(_mockUserRepository.Object, _jwtSettings);
         }
 
         [Fact]
