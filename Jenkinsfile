@@ -9,10 +9,14 @@ pipeline {
     dockerfile true
   }
   stages {
-    stage('Clean and Build') {
+    stage('Restore NuGet Packages') {
+      steps {
+        sh 'dotnet restore'
+      }
+    }
+    stage('Build/Test while SonarQube Analysis') {
       steps {
         withSonarQubeEnv('sonarqube') {
-          sh 'dotnet restore'
           sh "dotnet ${MSBUILD_SQ_SCANNER_HOME}/SonarScanner.MSBuild.dll begin /k:BA282229-FAC5-4740-B88B-DDBA89359F89 /d:sonar.host.url=https://sonarqube.vandenbrinksoftware.com /d:sonar.login=7fcfcf6e197cb915aa463035592b2de52451bf9a /d:sonar.cs.opencover.reportsPaths=\'**/coverage.opencover.xml\' /d:sonar.branch.name=${BRANCH_NAME} /d:sonar.coverage.exclusions=\'***API/Program.cs,***API/Startup.cs\'"
           sh 'dotnet build -c Release'
           sh "rm -drf ${env.WORKSPACE}/testResults"
