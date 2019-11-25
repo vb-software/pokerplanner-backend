@@ -22,14 +22,18 @@ pipeline {
       }
     }
     stage('Build Code') {
-      sh 'dotnet build -c Release'
-      sh "rm -drf ${env.WORKSPACE}/testResults"
+      steps {
+        sh 'dotnet build -c Release'
+        sh "rm -drf ${env.WORKSPACE}/testResults"
+      }
     }
     stage('Run Unit Tests') {
-      sh (returnStatus: true, script: "dotnet test --no-build -c Release --logger trx --results-directory ${env.WORKSPACE}/testResults /p:CollectCoverage=true /p:CoverletOutputFormat=opencover")
-      step([$class: 'XUnitPublisher', testTimeMargin: '3000', thresholdMode: 1, thresholds: [[$class: 'FailedThreshold', unstableThreshold: '0']
-                          , [$class: 'SkippedThreshold']], tools: [[$class: 'MSTestJunitHudsonTestType', deleteOutputFiles: true, failIfNotNew: false
-                          , pattern: 'testResults/**/*.trx', skipNoTestFiles: true, stopProcessingIfError: true]]])
+      steps {
+        sh (returnStatus: true, script: "dotnet test --no-build -c Release --logger trx --results-directory ${env.WORKSPACE}/testResults /p:CollectCoverage=true /p:CoverletOutputFormat=opencover")
+        step([$class: 'XUnitPublisher', testTimeMargin: '3000', thresholdMode: 1, thresholds: [[$class: 'FailedThreshold', unstableThreshold: '0']
+              , [$class: 'SkippedThreshold']], tools: [[$class: 'MSTestJunitHudsonTestType', deleteOutputFiles: true, failIfNotNew: false
+              , pattern: 'testResults/**/*.trx', skipNoTestFiles: true, stopProcessingIfError: true]]])
+      }
     }
     stage('End SonarQube') {
       steps {
