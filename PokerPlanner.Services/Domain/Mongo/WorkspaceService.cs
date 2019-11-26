@@ -99,6 +99,11 @@ namespace PokerPlanner.Services.Domain.Mongo
 
             var newWorkspaceUser = _mapper.Map<User>(userDto);
 
+            if (workspaceFromRepo.Users.IsNullOrEmpty())
+            {
+                workspaceFromRepo.Users = new List<User>();
+            }
+
             workspaceFromRepo.Users.Add(newWorkspaceUser);
 
             await _workspaceRepo.CreateOrUpdateWorkspace(workspaceFromRepo);

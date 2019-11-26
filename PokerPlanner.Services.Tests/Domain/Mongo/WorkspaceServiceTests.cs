@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Moq;
+using PokerPlanner.Entities.AutoMapper.Profiles;
 using PokerPlanner.Entities.Domain.Mongo;
 using PokerPlanner.Entities.DTO;
 using PokerPlanner.Repositories.Interfaces.Domain.Mongo;
@@ -24,7 +25,13 @@ namespace PokerPlanner.Services.Tests.Domain.Mongo
             _userRepo = new Mock<IUserRepository>();
             _workspaceRepo = new Mock<IWorkspaceRepository>();
             _mapper = new Mock<IMapper>();
-            _service = new WorkspaceService(_userRepo.Object, _workspaceRepo.Object, _mapper.Object);
+            var mockMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new WorkspaceMappings());
+                cfg.AddProfile(new UserMappings());
+            });
+            var mapper = mockMapper.CreateMapper();
+            _service = new WorkspaceService(_userRepo.Object, _workspaceRepo.Object, mapper);
         }
 
         [Fact]
@@ -53,7 +60,7 @@ namespace PokerPlanner.Services.Tests.Domain.Mongo
 
             var mappedWorkspace = new Workspace();
 
-            _mapper.Setup(mapper => mapper.Map<Workspace>(createWorkspaceDto)).Returns(mappedWorkspace);
+            // _mapper.Setup(mapper => mapper.Map<Workspace>(createWorkspaceDto)).Returns(mappedWorkspace);
 
             var workspaceCreated = await _service.CreateWorkspaceForUser(username, createWorkspaceDto);
 
@@ -170,11 +177,8 @@ namespace PokerPlanner.Services.Tests.Domain.Mongo
             var workspaceId = Guid.NewGuid();
             var workspaceReleaseDto = new CreateWorkspaceReleaseDto();
             var workspaceFromRepo = new Workspace();
-            var mappedRelease = new Release();
 
             _workspaceRepo.Setup(repo => repo.GetWorkspaceById(workspaceId)).ReturnsAsync(workspaceFromRepo);
-
-            _mapper.Setup(mapper => mapper.Map<Release>(workspaceReleaseDto)).Returns(mappedRelease);
 
             _workspaceRepo.Setup(repo => repo.CreateOrUpdateWorkspace(workspaceFromRepo)).ReturnsAsync(workspaceFromRepo);
 
@@ -183,7 +187,34 @@ namespace PokerPlanner.Services.Tests.Domain.Mongo
             Assert.NotNull(workspace);
             Assert.IsType<Workspace>(workspace);
             Assert.NotNull(workspace.Releases);
-            Assert.Equal(mappedRelease, workspace.Releases.First());
+        }
+
+        [Fact]
+        public async Task AddUserToWorkspaceWhenWorkspaceNullTest()
+        {
+            var workspaceId = Guid.NewGuid();
+
+            var workspace = await _service.AddUserToWorkspace(workspaceId, new UserDto());
+
+            Assert.Null(workspace);
+        }
+
+        [Fact]
+        public async Task AddUserToWorkspaceWhenReleasesNullTest()
+        {
+            var workspaceId = Guid.NewGuid();
+            var userDto = new UserDto();
+            var workspaceFromRepo = new Workspace();
+
+            _workspaceRepo.Setup(repo => repo.GetWorkspaceById(workspaceId)).ReturnsAsync(workspaceFromRepo);
+
+            _workspaceRepo.Setup(repo => repo.CreateOrUpdateWorkspace(workspaceFromRepo)).ReturnsAsync(workspaceFromRepo);
+
+            var workspace = await _service.AddUserToWorkspace(workspaceId, userDto);
+
+            Assert.NotNull(workspace);
+            Assert.IsType<Workspace>(workspace);
+            Assert.NotNull(workspace.Users);
         }
 
         [Fact]
@@ -204,11 +235,8 @@ namespace PokerPlanner.Services.Tests.Domain.Mongo
             var releaseId = Guid.NewGuid();
             var createIterationDto = new CreateWorkspaceReleaseIterationDto();
             var workspace = new Workspace { Releases = new List<Release> { new Release { Guid = Guid.NewGuid() } } };
-            var iteration = new Iteration();
 
             _workspaceRepo.Setup(repo => repo.GetWorkspaceById(workspaceId)).ReturnsAsync(workspace);
-
-            _mapper.Setup(mapper => mapper.Map<Iteration>(createIterationDto)).Returns(iteration);
 
             var release = await _service.AddIterationToWorkspaceRelease(workspaceId, releaseId, createIterationDto);
 
@@ -222,18 +250,85 @@ namespace PokerPlanner.Services.Tests.Domain.Mongo
             var releaseId = Guid.NewGuid();
             var createIterationDto = new CreateWorkspaceReleaseIterationDto();
             var workspace = new Workspace { Releases = new List<Release> { new Release { Guid = releaseId } } };
-            var iteration = new Iteration();
 
             _workspaceRepo.Setup(repo => repo.GetWorkspaceById(workspaceId)).ReturnsAsync(workspace);
-
-            _mapper.Setup(mapper => mapper.Map<Iteration>(createIterationDto)).Returns(iteration);
 
             var release = await _service.AddIterationToWorkspaceRelease(workspaceId, releaseId, createIterationDto);
 
             Assert.NotNull(release);
             Assert.IsType<Release>(release);
             Assert.NotNull(release.Iterations);
-            Assert.Equal(iteration, release.Iterations.First());
+        }
+
+        [Fact]
+        public async Task GetWorkspaceWummariesByUserTest()
+        {
+            var username = "some-user";
+            var userId = Guid.NewGuid();
+            var user = new User { Guid = userId };
+            List<Workspace> workspacesByUser = CreateWorkspacesByUser();
+
+            _userRepo.Setup(repo => repo.UserExists(username)).ReturnsAsync(true);
+            _userRepo.Setup(repo => repo.GetUserByUsername(username)).ReturnsAsync(user);
+
+            _workspaceRepo.Setup(repo => repo.GetWorkspacesByUser(userId)).ReturnsAsync(workspacesByUser);
+
+            var workspaceSummaries = await _service.GetWorkspaceSummariesByUser(username);
+
+            Assert.NotNull(workspaceSummaries);
+            Assert.IsType<List<WorkspaceSummaryDto>>(workspaceSummaries);
+        }
+
+        private static List<Workspace> CreateWorkspacesByUser()
+        {
+            return new List<Workspace>
+            {
+                new Workspace
+                {
+                    Configuration = new Configuration
+                    {
+                        AllowRevotes = true,
+                        HideUserVotes = true,
+                        ScoreSystem = ScoreSystem.Fibanocci,
+                        Guid = Guid.NewGuid()
+                    },
+                    Users = new List<User>
+                    {
+                        new User
+                        {
+                            Username = "flinstone",
+                            FirstName = "Fred",
+                            LastName = "Flinstone",
+                            Guid = Guid.NewGuid()
+                        }
+                    },
+                    Guid = Guid.NewGuid(),
+                    Name = "Some Workspace",
+                    Releases = new List<Release>
+                    {
+                        new Release
+                        {
+                            Name = "My Release",
+                            Iterations = new List<Iteration>
+                            {
+                                new Iteration
+                                {
+                                    Guid = Guid.NewGuid(),
+                                    UserStories = new List<UserStory>
+                                    {
+                                        new UserStory
+                                        {
+                                            Description = "Some Description",
+                                            Guid = Guid.NewGuid()
+                                        }
+                                    }
+                                }
+                            },
+                            Guid = Guid.NewGuid()
+                        }
+                    }
+                }
+            };
         }
     }
 }
