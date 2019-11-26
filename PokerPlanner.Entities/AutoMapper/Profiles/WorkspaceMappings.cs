@@ -3,9 +3,12 @@ using AutoMapper;
 using PokerPlanner.Entities.Domain.Mongo;
 using PokerPlanner.Entities.DTO;
 
-namespace PokerPlanner.Entities.AutoMapper.Profiles {
-    public class WorkspaceMappings : Profile, IMapperMarker {
-        public WorkspaceMappings() {
+namespace PokerPlanner.Entities.AutoMapper.Profiles
+{
+    public class WorkspaceMappings : Profile, IMapperMarker
+    {
+        public WorkspaceMappings()
+        {
             CreateMap<CreateWorkspaceDto, Workspace>();
             CreateMap<CreateWorkspaceReleaseDto, Release>()
                 .ForMember(dest => dest.Guid, opt => opt.Ignore());
@@ -15,7 +18,7 @@ namespace PokerPlanner.Entities.AutoMapper.Profiles {
             CreateMap<Workspace, WorkspaceSummaryDto>()
                 .ForMember(
                     dest => dest.HideUserVotes,
-                    opt => 
+                    opt =>
                     {
                         opt.PreCondition(src => src.Configuration != null);
                         opt.MapFrom(src => src.Configuration.HideUserVotes);
@@ -23,7 +26,7 @@ namespace PokerPlanner.Entities.AutoMapper.Profiles {
                 )
                 .ForMember(
                     dest => dest.AllowRevotes,
-                    opt => 
+                    opt =>
                     {
                         opt.PreCondition(src => src.Configuration != null);
                         opt.MapFrom(src => src.Configuration.AllowRevotes);
@@ -31,15 +34,15 @@ namespace PokerPlanner.Entities.AutoMapper.Profiles {
                 )
                 .ForMember(
                     dest => dest.ReleasesCount,
-                    opt => 
-                        {
-                            opt.PreCondition(src => src.Releases != null);
-                            opt.MapFrom(src => src.Releases.Count);
-                        }
+                    opt =>
+                    {
+                        opt.PreCondition(src => src.Releases != null);
+                        opt.MapFrom(src => src.Releases.Count);
+                    }
                 )
                 .ForMember(
                     dest => dest.UsersCount,
-                    opt => 
+                    opt =>
                     {
                         opt.PreCondition(src => src.Users != null);
                         opt.MapFrom(src => src.Users.Count);
