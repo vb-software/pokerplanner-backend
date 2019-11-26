@@ -38,20 +38,5 @@ namespace PokerPlanner.API.Controllers
         {
             return await _userRepo.GetUserById(id);
         }
-
-        [HttpPost]
-        public async Task<ApiResponse> NewUser([FromBody] UserDto userDTO)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = await _userRepo.AddNewUser(_mapper.Map<User>(userDTO));
-
-                return new ApiResponse("Created successfully", user, 201);
-            }
-            else
-            {
-                throw new ApiException(ModelState.AllErrors());
-            }
-        }
     }
 }
