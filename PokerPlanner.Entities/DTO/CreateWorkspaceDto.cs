@@ -8,7 +8,7 @@ namespace PokerPlanner.Entities.DTO
     {
         public string Name { get; set; }
         public Guid Guid { get; set; }
-        public Configuration Confguration { get; set; }
+        public Configuration Configuration { get; set; }
     }
 
     public class CreateWorkspaceDtoValidator : AbstractValidator<CreateWorkspaceDto>
