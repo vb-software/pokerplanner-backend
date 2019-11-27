@@ -197,5 +197,48 @@ namespace PokerPlanner.API.Tests.Controllers
             Assert.Equal(release, response.Result);
         }
 
+        [Fact]
+        public async Task GetWorkspaceSummariesTest()
+        {
+            var workspaceSummaries = new List<WorkspaceSummaryDto>();
+            var username = "some-user";
+
+            _workspaceService.Setup(service => service.GetWorkspaceSummariesByUser(username)).ReturnsAsync(workspaceSummaries);
+
+            var response = await _controller.GetWorkspaceSummaries();
+
+            Assert.NotNull(response);
+            Assert.IsType<List<WorkspaceSummaryDto>>(response);
+        }
+
+        public async Task AddUserToWorkspaceInvalidModelTest()
+        {
+            _controller.ModelState.AddModelError("error", "error");
+
+            try
+            {
+                await _controller.AddUserToWorkspace(Guid.NewGuid(), new UserDto());
+            }
+            catch (Exception e)
+            {
+                Assert.IsType<ApiException>(e);
+            }
+        }
+
+        [Fact]
+        public async Task AddUserToWorkspaceValidModelTest()
+        {
+            var userDto = new UserDto();
+            var workspaceId = Guid.NewGuid();
+            var workspace = new Workspace();
+
+            _workspaceService.Setup(service => service.AddUserToWorkspace(workspaceId, userDto)).ReturnsAsync(workspace);
+
+            var response = await _controller.AddUserToWorkspace(workspaceId, userDto);
+
+            Assert.NotNull(response);
+            Assert.IsType<Workspace>(response.Result);
+        }
+
     }
 }
