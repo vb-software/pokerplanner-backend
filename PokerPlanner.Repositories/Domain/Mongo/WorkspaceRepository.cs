@@ -27,7 +27,7 @@ namespace PokerPlanner.Repositories.Domain.Mongo
         {
             var collection = GetCollection();
 
-            await collection.ReplaceOneAsync(x => x.Guid == workspace.Guid, workspace);
+            await collection.ReplaceOneAsync(x => x.Guid == workspace.Guid, workspace, new UpdateOptions { IsUpsert = true });
 
             return workspace;
         }
