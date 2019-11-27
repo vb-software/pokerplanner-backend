@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Moq;
@@ -187,6 +186,7 @@ namespace PokerPlanner.Services.Tests.Domain.Mongo
             Assert.NotNull(workspace);
             Assert.IsType<Workspace>(workspace);
             Assert.NotNull(workspace.Releases);
+            Assert.Equal(1, workspace.Releases.Count);
         }
 
         [Fact]
@@ -217,8 +217,12 @@ namespace PokerPlanner.Services.Tests.Domain.Mongo
         public async Task AddUserToWorkspaceWhenUsersNullTest()
         {
             var workspaceId = Guid.NewGuid();
-            var userDto = new UserDto();
+            var userId = Guid.NewGuid();
+            var userDto = new UserDto { Guid = userId };
+            var user = new User();
             var workspaceFromRepo = new Workspace();
+
+            _userRepo.Setup(repo => repo.GetUserById(userId)).ReturnsAsync(user);
 
             _workspaceRepo.Setup(repo => repo.GetWorkspaceById(workspaceId)).ReturnsAsync(workspaceFromRepo);
 
@@ -229,6 +233,7 @@ namespace PokerPlanner.Services.Tests.Domain.Mongo
             Assert.NotNull(workspace);
             Assert.IsType<Workspace>(workspace);
             Assert.NotNull(workspace.Users);
+            Assert.Equal(1, workspace.Users.Count);
         }
         
         [Fact]
@@ -272,6 +277,7 @@ namespace PokerPlanner.Services.Tests.Domain.Mongo
             Assert.NotNull(release);
             Assert.IsType<Release>(release);
             Assert.NotNull(release.Iterations);
+            Assert.Equal(1, release.Iterations.Count);
         }
 
         [Fact]
