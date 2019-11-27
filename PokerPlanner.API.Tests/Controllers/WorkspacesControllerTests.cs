@@ -19,6 +19,7 @@ namespace PokerPlanner.API.Tests.Controllers
     {
         private readonly Mock<IWorkspaceService> _workspaceService;
         private readonly WorkspacesController _controller;
+        private string _username;
 
         public WorkspacesControllerTests()
         {
@@ -39,6 +40,8 @@ namespace PokerPlanner.API.Tests.Controllers
                     }, "someAuthTypeName"))
                 }
             };
+
+            _username = controller.User.Identity.Name;
 
             return controller;
         }
@@ -63,7 +66,7 @@ namespace PokerPlanner.API.Tests.Controllers
         {
             var createWorkspaceDto = new CreateWorkspaceDto();
             var workspace = new Workspace();
-            _workspaceService.Setup(service => service.CreateWorkspaceForUser("username", createWorkspaceDto)).ReturnsAsync(workspace);
+            _workspaceService.Setup(service => service.CreateWorkspaceForUser(_username, createWorkspaceDto)).ReturnsAsync(workspace);
 
             var response = await _controller.CreateWorkspace(createWorkspaceDto);
 
@@ -95,7 +98,7 @@ namespace PokerPlanner.API.Tests.Controllers
         {
             var createWorkspaceDto = new CreateWorkspaceDto();
             var workspace = new Workspace();
-            _workspaceService.Setup(service => service.CreateWorkspaceForUser("username", createWorkspaceDto)).ReturnsAsync(workspace);
+            _workspaceService.Setup(service => service.CreateWorkspaceForUser(_username, createWorkspaceDto)).ReturnsAsync(workspace);
 
             var response = await _controller.UpdateWorkspace(createWorkspaceDto);
 
@@ -110,7 +113,7 @@ namespace PokerPlanner.API.Tests.Controllers
         [Fact]
         public async Task GetWorkspacesTest()
         {
-            _workspaceService.Setup(service => service.GetWorkspacesByUser(It.IsAny<string>())).ReturnsAsync(new List<Workspace> { new Workspace() });
+            _workspaceService.Setup(service => service.GetWorkspacesByUser(_username)).ReturnsAsync(new List<Workspace> { new Workspace() });
 
             var workspacesReturned = await _controller.GetWorkspaces();
 
@@ -122,7 +125,7 @@ namespace PokerPlanner.API.Tests.Controllers
         public async Task GetWorkspaceByIdTest()
         {
             var workspaceId = Guid.NewGuid();
-            _workspaceService.Setup(service => service.GetWorkspaceByUserAndId(It.IsAny<string>(), workspaceId)).ReturnsAsync(new Workspace());
+            _workspaceService.Setup(service => service.GetWorkspaceByUserAndId(_username, workspaceId)).ReturnsAsync(new Workspace());
 
             var workspaceReturned = await _controller.GetWorkspaceById(workspaceId);
 
@@ -201,9 +204,8 @@ namespace PokerPlanner.API.Tests.Controllers
         public async Task GetWorkspaceSummariesTest()
         {
             var workspaceSummaries = new List<WorkspaceSummaryDto>();
-            var username = "some-user";
 
-            _workspaceService.Setup(service => service.GetWorkspaceSummariesByUser(username)).ReturnsAsync(workspaceSummaries);
+            _workspaceService.Setup(service => service.GetWorkspaceSummariesByUser(_username)).ReturnsAsync(workspaceSummaries);
 
             var response = await _controller.GetWorkspaceSummaries();
 
