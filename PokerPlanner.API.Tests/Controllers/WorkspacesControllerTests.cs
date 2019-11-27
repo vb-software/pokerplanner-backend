@@ -34,10 +34,10 @@ namespace PokerPlanner.API.Tests.Controllers
             {
                 HttpContext = new DefaultHttpContext
                 {
-                    User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
-                    {
-                        new Claim(ClaimTypes.Name, "username")
-                    }, "someAuthTypeName"))
+                User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+                {
+                new Claim(ClaimTypes.Name, "username")
+                }, "someAuthTypeName"))
                 }
             };
 
@@ -213,6 +213,7 @@ namespace PokerPlanner.API.Tests.Controllers
             Assert.IsType<List<WorkspaceSummaryDto>>(response);
         }
 
+        [Fact]
         public async Task AddUserToWorkspaceInvalidModelTest()
         {
             _controller.ModelState.AddModelError("error", "error");
