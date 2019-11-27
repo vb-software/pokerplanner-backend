@@ -24,7 +24,7 @@ namespace PokerPlanner.API.Tests.Controllers
         {
             _mockUserRepo = new Mock<IUserRepository>();
             _mockMapper = new Mock<IMapper>();
-            _controller = new UsersController(_mockMapper.Object, _mockUserRepo.Object);
+            _controller = new UsersController(_mockUserRepo.Object);
         }
         [Fact]
         public async Task GetUserByIdTest()
@@ -51,40 +51,6 @@ namespace PokerPlanner.API.Tests.Controllers
 
             Assert.IsType<List<User>>(result);
             Assert.Equal(3, result.Count());
-        }
-
-        [Fact]
-        public async Task NewUserInvalidModelTest()
-        {
-            var newUserDto = new UserDto();
-
-            _controller.ModelState.AddModelError("error", "error");
-
-            try
-            {
-                var result = await _controller.NewUser(newUserDto);
-            }
-            catch (Exception e)
-            {
-                Assert.IsType<ApiException>(e);
-            }
-        }
-
-        [Fact]
-        public async Task NewUserSuccessfullyCreatedTest()
-        {
-            var newUserDto = new UserDto();
-            var mappedUser = new User();
-
-            _mockMapper.Setup(map => map.Map<User>(newUserDto)).Returns(mappedUser);
-            _mockUserRepo.Setup(repo => repo.AddNewUser(mappedUser)).ReturnsAsync(mappedUser);
-
-            var result = await _controller.NewUser(newUserDto);
-
-            Assert.IsType<ApiResponse>(result);
-            Assert.Equal(201, result.StatusCode);
-            Assert.IsType<User>(result.Result);
-            Assert.Equal(mappedUser, result.Result);
         }
     }
 }

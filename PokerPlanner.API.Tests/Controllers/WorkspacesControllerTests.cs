@@ -19,6 +19,7 @@ namespace PokerPlanner.API.Tests.Controllers
     {
         private readonly Mock<IWorkspaceService> _workspaceService;
         private readonly WorkspacesController _controller;
+        private string _username;
 
         public WorkspacesControllerTests()
         {
@@ -33,12 +34,14 @@ namespace PokerPlanner.API.Tests.Controllers
             {
                 HttpContext = new DefaultHttpContext
                 {
-                    User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
-                    {
-                        new Claim(ClaimTypes.Name, "username")
-                    }, "someAuthTypeName"))
+                User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+                {
+                new Claim(ClaimTypes.Name, "username")
+                }, "someAuthTypeName"))
                 }
             };
+
+            _username = controller.User.Identity.Name;
 
             return controller;
         }
@@ -63,7 +66,7 @@ namespace PokerPlanner.API.Tests.Controllers
         {
             var createWorkspaceDto = new CreateWorkspaceDto();
             var workspace = new Workspace();
-            _workspaceService.Setup(service => service.CreateWorkspaceForUser("username", createWorkspaceDto)).ReturnsAsync(workspace);
+            _workspaceService.Setup(service => service.CreateWorkspaceForUser(_username, createWorkspaceDto)).ReturnsAsync(workspace);
 
             var response = await _controller.CreateWorkspace(createWorkspaceDto);
 
@@ -95,7 +98,7 @@ namespace PokerPlanner.API.Tests.Controllers
         {
             var createWorkspaceDto = new CreateWorkspaceDto();
             var workspace = new Workspace();
-            _workspaceService.Setup(service => service.CreateWorkspaceForUser("username", createWorkspaceDto)).ReturnsAsync(workspace);
+            _workspaceService.Setup(service => service.CreateWorkspaceForUser(_username, createWorkspaceDto)).ReturnsAsync(workspace);
 
             var response = await _controller.UpdateWorkspace(createWorkspaceDto);
 
@@ -110,7 +113,7 @@ namespace PokerPlanner.API.Tests.Controllers
         [Fact]
         public async Task GetWorkspacesTest()
         {
-            _workspaceService.Setup(service => service.GetWorkspacesByUser(It.IsAny<string>())).ReturnsAsync(new List<Workspace> { new Workspace() });
+            _workspaceService.Setup(service => service.GetWorkspacesByUser(_username)).ReturnsAsync(new List<Workspace> { new Workspace() });
 
             var workspacesReturned = await _controller.GetWorkspaces();
 
@@ -122,7 +125,7 @@ namespace PokerPlanner.API.Tests.Controllers
         public async Task GetWorkspaceByIdTest()
         {
             var workspaceId = Guid.NewGuid();
-            _workspaceService.Setup(service => service.GetWorkspaceByUserAndId(It.IsAny<string>(), workspaceId)).ReturnsAsync(new Workspace());
+            _workspaceService.Setup(service => service.GetWorkspaceByUserAndId(_username, workspaceId)).ReturnsAsync(new Workspace());
 
             var workspaceReturned = await _controller.GetWorkspaceById(workspaceId);
 
@@ -195,6 +198,49 @@ namespace PokerPlanner.API.Tests.Controllers
             Assert.Equal("Iteration added to release successfully", response.Message);
             Assert.Equal((int)HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(release, response.Result);
+        }
+
+        [Fact]
+        public async Task GetWorkspaceSummariesTest()
+        {
+            var workspaceSummaries = new List<WorkspaceSummaryDto>();
+
+            _workspaceService.Setup(service => service.GetWorkspaceSummariesByUser(_username)).ReturnsAsync(workspaceSummaries);
+
+            var response = await _controller.GetWorkspaceSummaries();
+
+            Assert.NotNull(response);
+            Assert.IsType<List<WorkspaceSummaryDto>>(response);
+        }
+
+        [Fact]
+        public async Task AddUserToWorkspaceInvalidModelTest()
+        {
+            _controller.ModelState.AddModelError("error", "error");
+
+            try
+            {
+                await _controller.AddUserToWorkspace(Guid.NewGuid(), new UserDto());
+            }
+            catch (Exception e)
+            {
+                Assert.IsType<ApiException>(e);
+            }
+        }
+
+        [Fact]
+        public async Task AddUserToWorkspaceValidModelTest()
+        {
+            var userDto = new UserDto();
+            var workspaceId = Guid.NewGuid();
+            var workspace = new Workspace();
+
+            _workspaceService.Setup(service => service.AddUserToWorkspace(workspaceId, userDto)).ReturnsAsync(workspace);
+
+            var response = await _controller.AddUserToWorkspace(workspaceId, userDto);
+
+            Assert.NotNull(response);
+            Assert.IsType<Workspace>(response.Result);
         }
 
     }

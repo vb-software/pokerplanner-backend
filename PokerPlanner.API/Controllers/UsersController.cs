@@ -17,12 +17,10 @@ namespace PokerPlanner.API.Controllers
     [Authorize]
     public class UsersController : ControllerBase
     {
-        private readonly IMapper _mapper;
         private readonly IUserRepository _userRepo;
 
-        public UsersController(IMapper mapper, IUserRepository userRepo)
+        public UsersController(IUserRepository userRepo)
         {
-            _mapper = mapper;
             _userRepo = userRepo;
         }
 
@@ -37,21 +35,6 @@ namespace PokerPlanner.API.Controllers
         public async Task<User> GetUserById(Guid id)
         {
             return await _userRepo.GetUserById(id);
-        }
-
-        [HttpPost]
-        public async Task<ApiResponse> NewUser([FromBody] UserDto userDTO)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = await _userRepo.AddNewUser(_mapper.Map<User>(userDTO));
-
-                return new ApiResponse("Created successfully", user, 201);
-            }
-            else
-            {
-                throw new ApiException(ModelState.AllErrors());
-            }
         }
     }
 }

@@ -12,7 +12,6 @@ namespace PokerPlanner.Repositories.Interfaces.Domain.Mongo
         Task<List<User>> GetUsers();
         Task<User> GetUserById(Guid userGuid);
         Task<User> GetUserByUsername(string username);
-        Task<User> AddNewUser(User userToAdd);
         Task RemoveUser(User userToRemove);
         Task<User> Register(User user, string password);
         Task<User> Login(string username, string password);

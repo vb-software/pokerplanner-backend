@@ -18,12 +18,6 @@ namespace PokerPlanner.Repositories.Domain.Mongo
             _mongoDbSettings = mongoDbSettings;
         }
 
-        public async Task<User> AddNewUser(User userToAdd)
-        {
-            await GetCollection().InsertOneAsync(userToAdd);
-            return userToAdd;
-        }
-
         public async Task<User> GetUserById(Guid userGuid)
         {
             var userFromRepo = await GetCollection().Find(user => user.Guid == userGuid).FirstOrDefaultAsync();

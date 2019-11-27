@@ -81,6 +81,36 @@ namespace PokerPlanner.Services.Domain.Mongo
             return workspaceFromRepo;
         }
 
+        public async Task<Workspace> AddUserToWorkspace(Guid workspaceId, UserDto userDto)
+        {
+            var workspaceFromRepo = await _workspaceRepo.GetWorkspaceById(workspaceId);
+
+            if (workspaceFromRepo == null)
+            {
+                return null;
+            }
+
+            var userFromRepo = await _userRepo.GetUserById(userDto.Guid);
+
+            if (userFromRepo == null)
+            {
+                return null;
+            }
+
+            var newWorkspaceUser = _mapper.Map<User>(userDto);
+
+            if (workspaceFromRepo.Users.IsNullOrEmpty())
+            {
+                workspaceFromRepo.Users = new List<User>();
+            }
+
+            workspaceFromRepo.Users.Add(newWorkspaceUser);
+
+            await _workspaceRepo.CreateOrUpdateWorkspace(workspaceFromRepo);
+
+            return workspaceFromRepo;
+        }
+
         public async Task<Workspace> CreateWorkspaceForUser(string username, CreateWorkspaceDto workspaceDto)
         {
             var userExists = await _userRepo.UserExists(username);
@@ -137,6 +167,15 @@ namespace PokerPlanner.Services.Domain.Mongo
             var workspacesByUser = await _workspaceRepo.GetWorkspacesByUser(user.Guid);
 
             return workspacesByUser;
+        }
+
+        public async Task<List<WorkspaceSummaryDto>> GetWorkspaceSummariesByUser(string username)
+        {
+            var workspacesByUser = await GetWorkspacesByUser(username);
+
+            var workspaceSummaries = _mapper.Map<List<WorkspaceSummaryDto>>(workspacesByUser);
+
+            return workspaceSummaries;
         }
     }
 }

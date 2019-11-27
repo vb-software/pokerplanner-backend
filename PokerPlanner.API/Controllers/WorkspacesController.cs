@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using AutoWrapper.Extensions;
 using AutoWrapper.Wrappers;
@@ -68,6 +69,16 @@ namespace PokerPlanner.API.Controllers
             return workspaces;
         }
 
+        [HttpGet("summaries")]
+        public async Task<List<WorkspaceSummaryDto>> GetWorkspaceSummaries()
+        {
+            var identity = User.Identity;
+
+            var workspaceSummaries = await _workspaceService.GetWorkspaceSummariesByUser(identity.Name);
+
+            return workspaceSummaries;
+        }
+
         [HttpGet("{workspaceId}")]
         public async Task<Workspace> GetWorkspaceById(Guid workspaceId)
         {
@@ -76,6 +87,21 @@ namespace PokerPlanner.API.Controllers
             var workspace = await _workspaceService.GetWorkspaceByUserAndId(identity.Name, workspaceId);
 
             return workspace;
+        }
+
+        [HttpPost("{workspaceId}")]
+        public async Task<ApiResponse> AddUserToWorkspace(Guid workspaceId, [FromBody] UserDto user)
+        {
+            if (ModelState.IsValid)
+            {
+                var workspace = await _workspaceService.AddUserToWorkspace(workspaceId, user);
+
+                return new ApiResponse("User added to workspace successfully", workspace, (int)HttpStatusCode.OK);
+            }
+            else
+            {
+                throw new ApiException(ModelState.AllErrors());
+            }
         }
 
         [HttpPost("{workspaceId}/releases")]

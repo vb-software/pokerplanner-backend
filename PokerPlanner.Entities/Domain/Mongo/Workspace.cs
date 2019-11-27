@@ -5,7 +5,7 @@ using PokerPlanner.Entities.Domain.Mongo.Attributes;
 
 namespace PokerPlanner.Entities.Domain.Mongo {
     [Serializable]
-    [MongoDocument ("workspaces")]
+    [MongoDocument("workspaces")]
     [BsonIgnoreExtraElements]
     public class Workspace : MongoIdentity {
         public Guid Guid { get; set; }
@@ -17,5 +17,8 @@ namespace PokerPlanner.Entities.Domain.Mongo {
 
         [BsonIgnoreIfNull]
         public List<Release> Releases { get; set; }
+
+        [BsonIgnoreIfNull]
+        public List<User> Users { get; set; }
     }
 }
