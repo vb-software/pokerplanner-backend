@@ -90,7 +90,7 @@ namespace PokerPlanner.Services.Domain.Mongo
                 return null;
             }
 
-            var userFromRepo = _userRepo.GetUserById(userDto.Guid);
+            var userFromRepo = await _userRepo.GetUserById(userDto.Guid);
 
             if (userFromRepo == null)
             {

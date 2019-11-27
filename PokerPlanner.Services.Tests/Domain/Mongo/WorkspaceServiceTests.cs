@@ -200,7 +200,21 @@ namespace PokerPlanner.Services.Tests.Domain.Mongo
         }
 
         [Fact]
-        public async Task AddUserToWorkspaceWhenReleasesNullTest()
+        public async Task AddUserToWorkspaceWhenUserNullTest()
+        {
+            var workspaceId = Guid.NewGuid();
+            var userDto = new UserDto();
+            var workspaceFromRepo = new Workspace();
+
+            _workspaceRepo.Setup(repo => repo.GetWorkspaceById(workspaceId)).ReturnsAsync(workspaceFromRepo);
+
+            var workspace = await _service.AddUserToWorkspace(workspaceId, userDto);
+
+            Assert.Null(workspace);
+        }
+
+        [Fact]
+        public async Task AddUserToWorkspaceWhenUsersNullTest()
         {
             var workspaceId = Guid.NewGuid();
             var userDto = new UserDto();
@@ -216,7 +230,7 @@ namespace PokerPlanner.Services.Tests.Domain.Mongo
             Assert.IsType<Workspace>(workspace);
             Assert.NotNull(workspace.Users);
         }
-
+        
         [Fact]
         public async Task AddIterationToWorkspaceReleaseWhenWorkspaceNullTest()
         {
