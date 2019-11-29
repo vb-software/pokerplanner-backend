@@ -309,8 +309,7 @@ namespace PokerPlanner.Services.Tests.Domain.Mongo
                     {
                         AllowRevotes = true,
                         HideUserVotes = true,
-                        ScoreSystem = ScoreSystem.Fibanocci,
-                        Guid = Guid.NewGuid()
+                        ScoreSystem = ScoreSystem.Fibanocci
                     },
                     Users = new List<User>
                     {

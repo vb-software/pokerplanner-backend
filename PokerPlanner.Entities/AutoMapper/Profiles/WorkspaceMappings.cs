@@ -17,6 +17,13 @@ namespace PokerPlanner.Entities.AutoMapper.Profiles
 
             CreateMap<Workspace, WorkspaceSummaryDto>()
                 .ForMember(
+                    dest => dest.ScoreSystem,
+                    opt => {
+                        opt.PreCondition(src => src.Configuration != null);
+                        opt.MapFrom(src => src.Configuration.ScoreSystem);
+                    }
+                )
+                .ForMember(
                     dest => dest.HideUserVotes,
                     opt =>
                     {
