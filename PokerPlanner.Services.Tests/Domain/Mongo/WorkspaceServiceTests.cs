@@ -16,14 +16,12 @@ namespace PokerPlanner.Services.Tests.Domain.Mongo
     {
         private readonly Mock<IUserRepository> _userRepo;
         private readonly Mock<IWorkspaceRepository> _workspaceRepo;
-        private readonly Mock<IMapper> _mapper;
         private readonly WorkspaceService _service;
 
         public WorkspaceServiceTests()
         {
             _userRepo = new Mock<IUserRepository>();
             _workspaceRepo = new Mock<IWorkspaceRepository>();
-            _mapper = new Mock<IMapper>();
             var mockMapper = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new WorkspaceMappings());
