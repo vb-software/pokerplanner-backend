@@ -60,7 +60,7 @@ namespace PokerPlanner.API {
 
             //Register Swagger
             services.AddSwaggerGen (c => {
-                c.SwaggerDoc ("v1", new OpenApiInfo { Title = "ASP.NET Core Template API", Version = "v1" });
+                c.SwaggerDoc ("v1", new OpenApiInfo { Title = "Poker Planner API", Version = "v1" });
             });
         }
 
