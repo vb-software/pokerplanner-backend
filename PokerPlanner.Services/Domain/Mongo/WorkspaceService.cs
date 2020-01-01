@@ -132,6 +132,22 @@ namespace PokerPlanner.Services.Domain.Mongo
             return newWorkspace;
         }
 
+        public async Task<Iteration> GetIterationByGuid(Guid iterationGuid)
+        {
+            var workspaces = await _workspaceRepo.GetWorkspaces();
+
+            // Flatten out the iterations
+            var releases = workspaces.Where(x => x.Releases != null).SelectMany(x => x.Releases);
+            var iterations = releases.Where(x => x.Iterations != null).SelectMany(x => x.Iterations);
+
+            return iterations.FirstOrDefault(x => x.Guid == iterationGuid);
+        }
+
+        public async Task<Workspace> GetWorkspaceById(Guid workspaceGuid)
+        {
+            return await _workspaceRepo.GetWorkspaceById(workspaceGuid);
+        }
+
         public async Task<Workspace> GetWorkspaceByUserAndId(string username, Guid workspaceGuid)
         {
             var userExists = await _userRepo.UserExists(username);
