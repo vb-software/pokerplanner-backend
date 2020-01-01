@@ -29,7 +29,7 @@ namespace PokerPlanner.Services.Domain.Mongo
 
             if (createGameDto.IterationGuid != Guid.Empty)
             {
-                var iteration = await _workspaceService.GetIterationByGuid(game.Iteration.Guid);
+                var iteration = await _workspaceService.GetIterationByGuid(createGameDto.IterationGuid);
 
                 if (iteration != null)
                 {

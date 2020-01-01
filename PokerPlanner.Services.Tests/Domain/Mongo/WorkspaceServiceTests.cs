@@ -1,3 +1,4 @@
+using System.Linq;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -284,7 +285,7 @@ namespace PokerPlanner.Services.Tests.Domain.Mongo
             var username = "some-user";
             var userId = Guid.NewGuid();
             var user = new User { Guid = userId };
-            List<Workspace> workspacesByUser = CreateWorkspacesByUser();
+            List<Workspace> workspacesByUser = CreateWorkspaces();
 
             _userRepo.Setup(repo => repo.UserExists(username)).ReturnsAsync(true);
             _userRepo.Setup(repo => repo.GetUserByUsername(username)).ReturnsAsync(user);
@@ -297,7 +298,36 @@ namespace PokerPlanner.Services.Tests.Domain.Mongo
             Assert.IsType<List<WorkspaceSummaryDto>>(workspaceSummaries);
         }
 
-        private static List<Workspace> CreateWorkspacesByUser()
+        [Fact]
+        public async Task GetIterationByGuidTest()
+        {
+            List<Workspace> workspaces = CreateWorkspaces();
+
+            _workspaceRepo.Setup(repo => repo.GetWorkspaces()).ReturnsAsync(workspaces);
+
+            // The setup for workspaces contains a release with two iterations, find one of the guids to do the lookup
+            var releases = workspaces.Where(x => x.Releases != null).SelectMany(x => x.Releases);
+            var releaseWithManyIterations = releases.Where(x => x.Iterations != null && x.Iterations.Count > 1).First();
+
+            // Grab the first iteration and get the guid
+            var singleIteration = releaseWithManyIterations.Iterations.First();
+
+            var returnedIteration = await _service.GetIterationByGuid(singleIteration.Guid);
+
+            Assert.NotNull(returnedIteration);
+            Assert.IsType<Iteration>(returnedIteration);
+            Assert.Equal(singleIteration, returnedIteration);
+        }
+
+        [Fact]
+        public async Task GetWorkspaceByIdTest()
+        {
+            await _service.GetWorkspaceById(Guid.NewGuid());
+
+            _workspaceRepo.Verify(repo => repo.GetWorkspaceById(It.IsAny<Guid>()), Times.Once);
+        }
+
+        private static List<Workspace> CreateWorkspaces()
         {
             return new List<Workspace>
             {
@@ -328,6 +358,18 @@ namespace PokerPlanner.Services.Tests.Domain.Mongo
                             Name = "My Release",
                             Iterations = new List<Iteration>
                             {
+                                new Iteration
+                                {
+                                    Guid = Guid.NewGuid(),
+                                    UserStories = new List<UserStory>
+                                    {
+                                        new UserStory
+                                        {
+                                            Description = "Some Description",
+                                            Guid = Guid.NewGuid()
+                                        }
+                                    }
+                                },
                                 new Iteration
                                 {
                                     Guid = Guid.NewGuid(),
