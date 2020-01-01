@@ -20,9 +20,14 @@ namespace PokerPlanner.Services.Domain.Mongo
         }
         public async Task<Game> CreateGame(CreateGameDto createGameDto)
         {
-            var game = new Game { Guid = Guid.NewGuid(), CreatedOn = DateTime.Now.ToUniversalTime() };
+            var game = new Game
+            {
+                Guid = Guid.NewGuid(),
+                CreatedOn = DateTime.Now.ToUniversalTime(),
+                IsPublic = createGameDto.IsPublic
+            };
 
-            if (createGameDto.IterationGuid != null && createGameDto.IterationGuid != Guid.Empty)
+            if (createGameDto.IterationGuid != Guid.Empty)
             {
                 var iteration = await _workspaceService.GetIterationByGuid(game.Iteration.Guid);
 
@@ -32,17 +37,14 @@ namespace PokerPlanner.Services.Domain.Mongo
                     game.Iteration.UserStories = game.Iteration.UserStories == null ? new List<UserStory>() : game.Iteration.UserStories;
                 }
 
-                if (createGameDto.WorkspaceGuid != null && createGameDto.WorkspaceGuid != Guid.Empty)
+                if (createGameDto.WorkspaceGuid != Guid.Empty)
                 {
                     var workspace = await _workspaceService.GetWorkspaceById(createGameDto.WorkspaceGuid);
-                    game.IsPublic = workspace.Configuration.IsPublic;
+                    game.IsPublic = !workspace.Configuration.IsPublic ? false : createGameDto.IsPublic;
                     game.WorkspaceGuid = createGameDto.WorkspaceGuid;
                 }
 
-                if (createGameDto.ReleaseGuid != null && createGameDto.ReleaseGuid != Guid.Empty)
-                {
-                    game.ReleaseGuid = createGameDto.ReleaseGuid;
-                }
+                game.ReleaseGuid = createGameDto.ReleaseGuid;
             }
 
             await _gameRepository.CreateOrUpdateGame(game);

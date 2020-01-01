@@ -10,6 +10,5 @@ namespace PokerPlanner.Entities.DTO
         public Guid WorkspaceGuid { get; set; }
         public Guid ReleaseGuid { get; set; }
         public Guid IterationGuid { get; set; }
-        public List<UserStory> UserStories { get; set; }
     }
 }
