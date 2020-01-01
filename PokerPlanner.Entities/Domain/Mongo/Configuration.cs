@@ -12,7 +12,7 @@ namespace PokerPlanner.Entities.Domain.Mongo
 
     public class Configuration
     {
-        public Guid Guid { get; set; }
+        public bool IsPublic { get; set; }
         public bool HideUserVotes { get; set; }
         public bool AllowRevotes { get; set; }
         [BsonRepresentation(BsonType.String)]

@@ -13,5 +13,7 @@ namespace PokerPlanner.Services.Interfaces.Domain.Mongo {
         Task<Release> AddIterationToWorkspaceRelease(Guid workspaceId, Guid releaseId, CreateWorkspaceReleaseIterationDto iterationDto);
         Task<List<WorkspaceSummaryDto>> GetWorkspaceSummariesByUser(string username);
         Task<Workspace> AddUserToWorkspace(Guid workspaceId, UserDto userDto);
+        Task<Iteration> GetIterationByGuid(Guid iterationGuid);
+        Task<Workspace> GetWorkspaceById(Guid workspaceGuid);
     }
 }
