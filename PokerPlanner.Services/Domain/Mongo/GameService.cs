@@ -40,7 +40,7 @@ namespace PokerPlanner.Services.Domain.Mongo
                 if (createGameDto.WorkspaceGuid != Guid.Empty)
                 {
                     var workspace = await _workspaceService.GetWorkspaceById(createGameDto.WorkspaceGuid);
-                    game.IsPublic = !workspace.Configuration.IsPublic ? false : createGameDto.IsPublic;
+                    game.IsPublic = !workspace.Configuration.IsPublic ? workspace.Configuration.IsPublic : createGameDto.IsPublic;
                     game.WorkspaceGuid = createGameDto.WorkspaceGuid;
                 }
 
