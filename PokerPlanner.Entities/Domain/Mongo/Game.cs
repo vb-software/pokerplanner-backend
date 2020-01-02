@@ -11,6 +11,8 @@ namespace PokerPlanner.Entities.Domain.Mongo
     {
         public Guid Guid { get; set; }
         [BsonIgnoreIfDefault]
+        public Guid CreatorGuid { get; set; }
+        [BsonIgnoreIfDefault]
         public bool IsPublic { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime LastUpdatedOn { get; set; }
