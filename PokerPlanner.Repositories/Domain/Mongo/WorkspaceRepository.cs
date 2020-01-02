@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using PokerPlanner.Entities.Domain.Mongo;
 using PokerPlanner.Entities.Settings;
@@ -58,5 +60,32 @@ namespace PokerPlanner.Repositories.Domain.Mongo
 
             return workspace;
         }
+
+        // public async Task<UserStory> UpdateActiveStatusOnUserStory(
+        //     Guid workspaceId,
+        //     Guid releaseId,
+        //     Guid iterationId,
+        //     Guid userStoryId,
+        //     bool active)
+        // {
+        //     var collection = GetCollection();
+        //     var updateDefinition = Builders<Workspace>.Update.Set("releases.$[r].iterations.$[i].userStories.$[u].active", active);
+        //     var arrayFilters = new List<ArrayFilterDefinition>
+        //     {
+        //         new BsonDocumentArrayFilterDefinition<BsonDocument>(new BsonDocument("r.guid", releaseId)),
+        //         new BsonDocumentArrayFilterDefinition<BsonDocument>(new BsonDocument("i.guid", iterationId)),
+        //         new BsonDocumentArrayFilterDefinition<BsonDocument>(new BsonDocument("u.guid", userStoryId))
+        //     };
+        //     var updateOptions = new UpdateOptions { ArrayFilters = arrayFilters };
+
+        //     await collection.UpdateOneAsync(x => x.Guid == workspaceId, updateDefinition, updateOptions);
+
+        //     var workspace = await collection.Find(x => x.Guid == workspaceId).FirstOrDefaultAsync();
+
+        //     return workspace.Releases
+        //         .First(x => x.Guid == releaseId).Iterations
+        //         .First(x => x.Guid == iterationId).UserStories
+        //         .First(x => x.Guid == userStoryId);
+        // }
     }
 }
