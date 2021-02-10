@@ -6,7 +6,10 @@ pipeline {
   }
 
   agent {
-    dockerfile true
+    dockerfile {
+      filename 'Dockerfile'
+      args '--net jenkins'
+    }
   }
   stages {
     stage('Restore NuGet Packages') {
@@ -17,7 +20,7 @@ pipeline {
     stage('Begin SonarQube') {
       steps {
         withSonarQubeEnv('sonarqube') {
-          sh "dotnet ${MSBUILD_SQ_SCANNER_HOME}/SonarScanner.MSBuild.dll begin /k:BA282229-FAC5-4740-B88B-DDBA89359F89 /d:sonar.host.url=https://sonarqube.vandenbrinksoftware.com /d:sonar.login=7fcfcf6e197cb915aa463035592b2de52451bf9a /d:sonar.cs.opencover.reportsPaths=\'**/coverage.opencover.xml\' /d:sonar.branch.name=${BRANCH_NAME} /d:sonar.coverage.exclusions=\'***API/Program.cs,***API/Startup.cs\'"
+          sh "dotnet ${MSBUILD_SQ_SCANNER_HOME}/SonarScanner.MSBuild.dll begin /k:pokerplanner-backend /d:sonar.host.url=http://sonarqube:9000 /d:sonar.login=99eb50ab35d96468c912a975155d65a9086d72b1 /d:sonar.cs.opencover.reportsPaths=\'**/coverage.opencover.xml\' /d:sonar.branch.name=${BRANCH_NAME} /d:sonar.coverage.exclusions=\'***API/Program.cs,***API/Startup.cs\'"
         }
       }
     }
@@ -38,7 +41,7 @@ pipeline {
     stage('End SonarQube') {
       steps {
         withSonarQubeEnv('sonarqube') {
-          sh "dotnet ${MSBUILD_SQ_SCANNER_HOME}/SonarScanner.MSBuild.dll end /d:sonar.login=7fcfcf6e197cb915aa463035592b2de52451bf9a"
+          sh "dotnet ${MSBUILD_SQ_SCANNER_HOME}/SonarScanner.MSBuild.dll end /d:sonar.login=99eb50ab35d96468c912a975155d65a9086d72b1"
         }
 
         timeout(time: 10, unit: 'MINUTES') {
