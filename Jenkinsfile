@@ -20,7 +20,7 @@ pipeline {
     stage('Begin SonarQube') {
       steps {
         withSonarQubeEnv('sonarqube') {
-          sh "dotnet ${MSBUILD_SQ_SCANNER_HOME}/SonarScanner.MSBuild.dll begin /k:pokerplanner-backend /d:sonar.host.url=https://sonarqube:9000 /d:sonar.login=99eb50ab35d96468c912a975155d65a9086d72b1 /d:sonar.cs.opencover.reportsPaths=\'**/coverage.opencover.xml\' /d:sonar.branch.name=${BRANCH_NAME} /d:sonar.coverage.exclusions=\'***API/Program.cs,***API/Startup.cs\'"
+          sh "dotnet ${MSBUILD_SQ_SCANNER_HOME}/SonarScanner.MSBuild.dll begin /k:pokerplanner-backend /d:sonar.host.url=http://sonarqube:9000 /d:sonar.login=99eb50ab35d96468c912a975155d65a9086d72b1 /d:sonar.cs.opencover.reportsPaths=\'**/coverage.opencover.xml\' /d:sonar.branch.name=${BRANCH_NAME} /d:sonar.coverage.exclusions=\'***API/Program.cs,***API/Startup.cs\'"
         }
       }
     }
